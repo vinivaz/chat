@@ -1,0 +1,27 @@
+{
+  "name": "chat_project",
+  "version": "0.0.1",
+  "description": "An Node JS application that connects users, create chat rooms with socketIO",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon ./server.js",
+    "start": "nodemon ./server.js"
+  },
+  "author": "Vinicius Vaz",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "nodemon": "^2.0.9"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.2",
+    "nodemailer": "^6.6.2",
+    "nodemailer-express-handlebars": "^4.0.0",
+    "require-dir": "^1.2.0",
+    "uuid": "^8.3.2"
+  }
+}
