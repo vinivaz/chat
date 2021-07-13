@@ -1,6 +1,6 @@
 const routes = require('express').Router();
 const userConstroller = require('./app/controllers/userController');
-const profileConstroller = require('./app/controllers/profileController');
+
 
 const auth = require('./app/middlewares/auth')
 
@@ -11,7 +11,7 @@ routes.post('/user/forgot_password', userConstroller.forgotPassword);
 routes.post('/user/change_password', userConstroller.changePassword);
 routes.delete('/user/delete', userConstroller.delete);
 
-routes.use('/user/profile', profileConstroller)
+routes.use('/user/profile', require('./app/controllers/profileController'))
 
 routes.get("/teste",  auth, (req, res) => {
   return res.json({ authenticated: true, userId: req.userId })
