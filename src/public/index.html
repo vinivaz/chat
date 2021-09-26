@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Queria morre</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="teste"></div>
+
+
+  <form id="chat">
+
+    <input type="text" name="username" placeholder="Type your Username">
+    <div class="messages"></div>
+    <input type="text" name="message" placeholder="Send Message">
+    <button type="submit">enviar</button>
+  </form>
+  <script type="text/javascript">
+    var socket = io();
+
+
+
+    function renderMessage(author, message) {
+      if($('input[name=username]').val() == author) {
+        $('.messages').append(
+        '<div id="goose" class="box"><div class="msg-me"><span>' + message + '</span></div></div>')
+      } else {
+        $('.messages').append(
+        '<div class="box"><div class="msg-them"><span>' + author + ': ' + message +'</span></div></div>')
+      }
+
+    }
+    function renderOnline(people){
+      var online = $('#teste')
+
+      online.empty()
+      online.append("<ul id='hate'></ul>")
+      //var node = document.getElementById("conteudo");
+      var odios = $('#hate')
+      
+      //online.remove()
+      for (person of people) {
+          odios.append(
+          '<li>'+ person +'</li>'
+          )
+        }
+      
+    }
+
+    socket.on('online', function(people){
+      renderOnline(people)
+    })
+
+    socket.on('previousMessages', function(messages){
+        
+
+        for ( message of messages) {
+          renderMessage(message.author, message.message)
+        } 
+        var chat = document.querySelector('.messages');
+
+        chat.scrollTo(0, chat.scrollHeight);
+
+    })
+
+    socket.on('receivedMessage', function(msg){
+
+
+
+        renderMessage(msg.author, msg.message);
+        var chat = document.querySelector('.messages');
+        chat.scrollTo(0, chat.scrollHeight);
+    })
+
+    $('#chat').submit(function(event) {
+      event.preventDefault();
+
+      var author = $('input[name=username]').val();
+      var message = $('input[name=message]').val();
+
+      if(message.length && author.length) {
+        var messageObject = {
+          author: author,
+          message: message
+        };
+
+        user(author);
+
+        socket.emit('chat message', messageObject);
+        renderMessage(messageObject.author, messageObject.message)
+        var chat = document.querySelector('.messages');
+        chat.scrollTo(0, chat.scrollHeight);
+
+      }
+
+    })
+    function user(user) {
+      var c = document.cookie = "username="+user+";"
+      console.log(c)
+      return c;
+    }
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <form id="login">
+    <input name="email" type="text">
+    <input name="password" type="text">
+    <button type="submit">enviar</button>
+  </form>
+
+  <script type="text/javascript">
+    $('#login').submit( function(event) {
+      event.preventDefault();
+
+      var email = $('input[name=email]').val();
+      var password = $('input[name=password]').val();
+
+      if(email.length && password.length){
+        console.log(email, password)
+        var options = {
+          method: 'POST',
+          url: 'http://localhost:3000/api/user/authenticate',
+          headers: {'Content-Type': 'application/json'},
+          data: {email, password}
+        };
+
+        axios.request(options).then(function (response) {
+          var result = response.data;
+          if(result.error){
+            alert(result.error)
+          }else{
+            console.log(result)
+          }
+        }).catch(function (error) {
+          console.error(error);
+        });
+        }
+        
+      })
+    </script>
+  </body>
+  </html>

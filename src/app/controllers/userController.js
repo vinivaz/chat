@@ -5,7 +5,6 @@ const crypto = require('crypto');
 const mailer = require('../../modules/mailer');
 
 const authConfig = require('../../config/auth.json');
-const { reset } = require('nodemon');
 
 const Users = require('../models/users').model('user');
 //const Users = models.model('user');
@@ -18,10 +17,17 @@ function generateToken (params = {}) {
 }
 
 module.exports = {
+  
 
   async list(req, res) {
 
-    const user = await Users.find();
+    const { page = 1 } = req.query;
+    const options = {
+      page: page,
+      limit: 15
+    }
+
+    const user = await Users.paginate({}, options);
 
     return res.json(user);
   },
@@ -46,7 +52,8 @@ module.exports = {
       const user = await Users.create({
         name,
         password,
-        email
+        email,
+        profile_img: "",
       });
 
       user.password = undefined;

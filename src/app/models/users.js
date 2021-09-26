@@ -1,19 +1,17 @@
 const mongoose = require('mongoose');
 const {v4: uuidv4} = require('uuid');
 const bcrypt = require('bcrypt');
+const mongoosePaginate = require('mongoose-paginate');
 
 const userSchema = new mongoose.Schema({
-  _id: {
-    type: String,
-    default: uuidv4(),
-  },
+  
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   profile_img: {
     type: String,
+    
   },
   password: {
     type: String,
@@ -33,12 +31,10 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: {
     type: Date,
     select: false,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
   }
-});
+},{ timestamps: true});
+
+userSchema.plugin(mongoosePaginate); 
 
 userSchema.pre('save', async function(next){
   const hash = await bcrypt.hash(this.password, 10);

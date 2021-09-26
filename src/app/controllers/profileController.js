@@ -11,10 +11,40 @@ const savePic = require('../middlewares/multer');
 
 //authentication middleware
 routes.use(authMiddleware);
-//multer(multerConfig).single('file'),
-//post profile picture route
-routes.post('/upload', savePic, async(req, res) => {
+
+routes.get('/find/:userId', async(req, res) => {
   
+  try{
+  
+    const user = await Users.findById(req.params.userId);
+    console.log(user);
+
+    return res.json(user)  
+  }catch(err){
+    console.log(err)
+    return res.json({error: "Error on loading profile, Try again"});
+  }
+  
+});
+
+routes.get('/find', async(req, res) => {
+  
+  try{
+  
+    const user = await Users.findById(req.userId);
+    console.log(user);
+
+    return res.json(user)  
+  }catch(err){
+    console.log(err)
+    return res.json({error: "Error on loading profile, Try again"});
+  }
+  
+});
+
+//post profile picture route
+routes.post('/edit', savePic, async(req, res) => {
+  console.log("reeqqq",req)
   try{
   
     const user = await Users.findById(req.userId);

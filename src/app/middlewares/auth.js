@@ -6,7 +6,10 @@ module.exports = (req, res, next) => {
   
 
   if(!authHeader) {
-    return res.json({ error: "No token providen" })
+    if(req.isView){
+      return res.render('login.html')
+    }
+      return res.json({ error: "No token providen" })
   }
 
   const parts = authHeader.split(' ');
@@ -20,11 +23,15 @@ module.exports = (req, res, next) => {
   
 
   if(!/^Bearer$/i.test(scheme)){
+    
     return res.json({ error: "Token malformated" });
   }
 
   jwt.verify(token, authConfig.secret, (err, decode) => {
     if(err){
+      /*if(req.isView){
+        return res.render('login.html')
+      }*/
       return res.json({ error: "Invalid token" });
     }
     req.userId = decode.id;

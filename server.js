@@ -4,18 +4,29 @@ const morgan = require('morgan');
 const express = require('express');
 const path = require('path');
 //const mongoose = require('mongoose');
+var cors = require('cors')
+
 
 const connectDB = require('./src/database');
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'));
-app.use('/files/profile',express.static('tmp/profile'));
+app
+.use(cors())
+.use(express.json())
+.use(express.urlencoded({ extended: true }))
+.use(morgan('dev'))
+.use('/files/profile',express.static('tmp/profile'))
+.use('/files/message',express.static('tmp/message'))
 connectDB();
 
 app.use('/api', require('./src/routes'));
 
 
+const socketIo = require('./src/app/utils/websocket')
 
-app.listen(process.env.SERVER_PORT||3000);
+socketIo(app)
+
+
+
+
+

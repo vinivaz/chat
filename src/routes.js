@@ -1,19 +1,24 @@
 const routes = require('express').Router();
-const userConstroller = require('./app/controllers/userController');
 
+const userController = require('./app/controllers/userController');
 
 const auth = require('./app/middlewares/auth')
 
-routes.get('/user/list', userConstroller.list);
-routes.post('/user/register', userConstroller.register);
-routes.post('/user/authenticate', userConstroller.auth);
-routes.post('/user/forgot_password', userConstroller.forgotPassword);
-routes.post('/user/change_password', userConstroller.changePassword);
-routes.delete('/user/delete', userConstroller.delete);
+routes
+  .get('/user/list', userController.list)
+  .post('/user/register', userController.register)
+  .post('/user/authenticate', userController.auth)
+  .post('/user/forgot_password', userController.forgotPassword)
+  .post('/user/change_password', userController.changePassword)
+  .delete('/user/delete', userController.delete)
 
-routes.use('/user/profile', require('./app/controllers/profileController'))
+  .use('/user/profile', require('./app/controllers/profileController'))
+  .use('/user/rooms', require('./app/controllers/roomController'))
+  .use('/messages', require('./app/controllers/messageController'))
 
-routes.get("/teste",  auth, (req, res) => {
-  return res.json({ authenticated: true, userId: req.userId })
-})
+  .get("/teste",  auth, (req, res) => {
+    return res.json({ authenticated: true, userId: req.userId })
+  })
+  
+  
 module.exports = routes;
