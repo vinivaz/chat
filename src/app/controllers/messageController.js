@@ -4,6 +4,8 @@ const path = require('path');
 
 const Messages = require('../models/messages');
 
+const Rooms = require('../models/rooms');
+
 const imgMessage = require('../middlewares/multer');
 
 const authConfig = require('../middlewares/auth');
@@ -77,18 +79,44 @@ routes.get('/:roomId', async(req, res) => {
 routes.post('/', async(req, res) => {
 
   const { text, respondedTo, room } = req.body;
-  console.log(req.userId)
+  //console.log(req.userId)
     
+  if(!room){
+    return res.json({ error: "Room is required"})
+  }
+
   try{
 
-    const messages = await Messages.create({
+    const message = await Messages.create({
       text,
       userId: req.userId,
       respondedTo,
       room,
     });
 
-    return res.json({messages})
+    await message.populate([
+      'userId',
+    ]);
+
+    //await message.populate('userId').execPopulate()
+
+    if(text !== undefined){
+      if(text.length > 15){
+
+        var textSample = text.slice(0, -(text.length - 15)) + "..."
+        
+      }else{
+        var textSample = text
+      }
+    }
+
+    const lastMessage = await Rooms.findByIdAndUpdate(room,{
+      "$set": {
+        lastMessage: textSample
+      }
+    }, {new: true});
+
+    return res.json({message})
 
   }catch(err){
     console.log(err);
@@ -99,20 +127,35 @@ routes.post('/', async(req, res) => {
 
 routes.post('/image', imgMessage, async(req, res) => {
 
-  const { response, room } = req.body;
+  const { respondedTo, room } = req.body;
 
-  console.log(response, room)
+  //console.log(respondedTo, "room: ", room)
+
+  if(!room){
+    return res.json({ error: "Room is required"})
+  }
 
   try{
 
-    const messages = await Messages.create({
+    const message = await Messages.create({
       url: `localhost:3000/files/message/${req.file.filename}`,
       userId: req.userId,
-      response,
+      respondedTo,
       room,
     });
 
-    return res.json({messages})
+    const lastMessage = await Rooms.findByIdAndUpdate(room,{
+      "$set": {
+        lastMessage: "*Picture*"
+      }
+    }, {new: true});
+
+    await message.populate([
+      'userId',
+    ]);
+    //await message.populate('userId').execPopulate()
+
+    return res.json({message})
 
   }catch(err){
     console.log(err);
@@ -145,7 +188,7 @@ routes.put('/', async(req, res) => {
 
       if ( likes[i] === req.userId) { 
         likes.splice(i, 1); 
-        console.log(likes)
+        //console.log(likes)
 
         const messages = await Messages.findByIdAndUpdate(
           messageId,
@@ -201,7 +244,7 @@ routes.delete('/:msgId', async(req, res) => {
       //selecting file name from file url
       const img = messages.url.slice(29);
 
-      console.log(img);
+      //console.log(img);
 
       try {
         await fs.unlinkSync(path.resolve(__dirname, "..", "..", "..", "tmp", "message", img));

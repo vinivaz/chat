@@ -14,7 +14,7 @@ app
 .use(cors())
 .use(express.json())
 .use(express.urlencoded({ extended: true }))
-.use(morgan('dev'))
+// .use(morgan('dev'))
 .use('/files/profile',express.static('tmp/profile'))
 .use('/files/message',express.static('tmp/message'))
 connectDB();

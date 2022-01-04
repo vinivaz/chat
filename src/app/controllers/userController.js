@@ -11,7 +11,7 @@ const Users = require('../models/users').model('user');
 
 function generateToken (params = {}) {
   return jwt.sign(params, authConfig.secret, {
-    expiresIn: 86400,
+    expiresIn: 86400,//86400
   });
 
 }
@@ -119,6 +119,8 @@ module.exports = {
         }
       });
 
+      //console.log("token ", token)
+
       await mailer.sendMail(
         {
           to: email,
@@ -128,7 +130,7 @@ module.exports = {
         },(err) => {
           if (err){
             console.log(err)
-            return res.status(400)
+            return res
             .send({ error: 'Cannot send forgot password email' });
           }else{         
             return res.send();
@@ -172,7 +174,7 @@ module.exports = {
 
       await user.save();
 
-      return res.json();
+      return res.json({result: "Password changed successfully"});
 
     }catch(err){
       console.log(err)

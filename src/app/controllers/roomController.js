@@ -1,4 +1,7 @@
 const routes = require('express').Router();
+const fs = require('fs');
+const path = require('path');
+
 const Rooms = require('../models/rooms');
 const Messages = require('../models/messages');
 const authConfig = require('../middlewares/auth');
@@ -11,6 +14,8 @@ routes.get('/', async(req, res) => {
   const options = {
     page: page,
     limit: 15,
+    sort:{ updatedAt: -1},
+    populate: ['users']
   }
 
   try{
@@ -18,7 +23,7 @@ routes.get('/', async(req, res) => {
     const room = await Rooms.paginate({ users: req.userId}, options);  
     return res.json({room})
   }catch(err){
-    console.log(err)
+    //console.log(err)
     return res.json({error: 'error on find rooms'});
   }
 });
@@ -36,14 +41,14 @@ routes.get('/:roomId', async(req, res) => {
   }
 });
 
-routes.get('/byUserId/:otherUserId', async(req, res) => {
-  const { otherUserId } = req.params;
-  const userId = req.userId;
-  
+routes.post('/byUsers', async(req, res) => {
+  const { id1, id2 } = req.body;
+  //const userId = req.userId;
+  //console.log("reqbody", req.body)
 
   try{
     
-    const room = await Rooms.find({ users: [otherUserId, userId] });  
+    const room = await Rooms.find({ users: [id1, id2] });  
     return res.json({room})
   }catch(err){
     console.log(err)
@@ -60,7 +65,8 @@ routes.post('/', async(req, res) => {
     const room = await Rooms.create({
       adm: [req.userId],
       users,
-      name
+      name,
+      lastMessage: ''
     })
     return res.json({room})
   }catch(err){
@@ -96,8 +102,30 @@ routes.put('/:roomId', async(req, res) => {
 
 routes.delete('/:roomId', async(req, res) => {
   try{
-    const room = await Rooms.findByIdAndDelete(req.params.roomId);  
-    const messages = await Messages.remove({room: req.params.roomId});
+    const room = await Rooms.findByIdAndDelete(req.params.roomId); 
+    
+    const messages = await Messages.find({room: req.params.roomId})
+
+    //const messagesId = messages.map(msg => msg._id)
+
+    await Messages.deleteMany({room: req.params.roomId})
+
+    messages.map(msg =>{
+      if((msg.url)&& msg.url !== ''){
+        try {
+          const imgUrl = msg.url.slice(29);
+
+          fs.unlinkSync(path.resolve(__dirname, "..", "..", "..", "tmp", "message", imgUrl));
+          
+        } catch(err) {
+          console.error(err)
+          
+        }
+
+      }  
+    })
+    //console.log(messages)
+    messages.map(x => console.log("console url",x.url))
     return res.json()
   }catch(err){
     console.log(err)

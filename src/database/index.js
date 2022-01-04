@@ -14,9 +14,9 @@ const uri = `mongodb://${USER}:${PASSWORD}@${HOST}:${PORT}/${DATABASE}`;
 console.log(uri)
 
 const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
+  //useNewUrlParser: true,
+  //useUnifiedTopology: true,
+  //useFindAndModify: false
 }
 
 const connectDB = async () => {

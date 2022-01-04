@@ -13,6 +13,9 @@ const roomSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   }],
+  lastMessage: {
+    type: String,
+  },
   users: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
@@ -21,8 +24,9 @@ const roomSchema = new mongoose.Schema({
     type: String,
     require: false,
   },
-});
+},{ timestamps: true});
 
-roomSchema.plugin(mongoosePaginate); 
+roomSchema.plugin(mongoosePaginate);
+
 
 module.exports = new mongoose.model('room', roomSchema);
