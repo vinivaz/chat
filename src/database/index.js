@@ -17,7 +17,7 @@ const atlasDatabase = process.env.ATLAS_DATABASE
 // const uri = `mongodb://${USER}:${PASSWORD}@${HOST}:${PORT}/${DATABASE}`;
 const uri =`mongodb+srv://${atlasUser}:${atlasPassword}@nexumcluster.tiray.mongodb.net/${atlasDatabase}`
 
-console.log(uri)
+
 
 const options = {
   //useNewUrlParser: true,
