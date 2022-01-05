@@ -184,7 +184,7 @@ function socketIo(app) {
     });
     
   });
-  server.listen(process.env.SERVER_PORT||3000);
+  server.listen(process.env.PORT||3000);
 }
 
 module.exports = socketIo;
