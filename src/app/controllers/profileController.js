@@ -61,8 +61,9 @@ routes.post('/edit', savePic, async(req, res) => {
     const user = await Users.findById(req.userId);
     //console.log(user);
     const newUserPic = await Users.findByIdAndUpdate(req.userId, {
-      
-        profile_img: `localhost:3000/files/profile/${req.file.filename}`
+
+      // profile_img: `localhost:3000/files/profile/${req.file.filename}`
+        profile_img: `https://nexum-api.herokuapp.com/files/profile/${req.file.filename}`
       
     }, {new: true});
 

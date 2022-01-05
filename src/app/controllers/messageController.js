@@ -138,7 +138,9 @@ routes.post('/image', imgMessage, async(req, res) => {
   try{
 
     const message = await Messages.create({
-      url: `localhost:3000/files/message/${req.file.filename}`,
+      
+      // url: `localhost:3000/files/message/${req.file.filename}`,
+      url: `https://nexum-api.herokuapp.com/files/message/${req.file.filename}`,
       userId: req.userId,
       respondedTo,
       room,
