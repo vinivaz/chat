@@ -58,11 +58,12 @@ function socketIo(app) {
 
   const server = require('http').createServer(app);
   const { Server } = require('socket.io');
-  const io = new Server(server, {
-    cors: {
-    origin: "https://nexum-front-end.herokuapp.com",
-    methods: ["GET", "POST"]
-  }
+  const io = new Server(server,
+    {
+      cors: {
+      origin: ["https://nexum-front-end.herokuapp.com", "http://localhost:3000"],
+      methods: ["GET", "POST"]
+    }
   });
 
   io.on('connection', (socket) => {
