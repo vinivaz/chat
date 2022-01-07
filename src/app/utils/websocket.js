@@ -1,8 +1,6 @@
-const { on } = require('events');
+
 const express = require('express');
 const path = require('path')
-const authConfig = require('../middlewares/auth');
-const online = require('../models/overview')
 function socketIo(app) {
 
   // function removeItemOnce(arr, value) {
@@ -15,10 +13,7 @@ function socketIo(app) {
   //   return arr;
   // }
 
-  function isView(req, res, next){
-    req.isView = true;
-    next()
-  }
+  
   
   app.use('/views', express.static(path.join(__dirname, '..', '..', 'public')));
   app.set('views', path.join(__dirname, '..', '..', 'public'));
@@ -32,7 +27,6 @@ function socketIo(app) {
     return res.render('index.html')
   })
   //settar o token pra parte de requisições e so socket io, n nos views
-  let messages = [];
 
   let onlineProfiles = new Map();
 
@@ -66,7 +60,7 @@ function socketIo(app) {
   const { Server } = require('socket.io');
   const io = new Server(server, {
     cors: {
-    origin: "http://localhost:3000",
+    origin: "https://nexum-front-end.herokuapp.com/",
     methods: ["GET", "POST"]
   }
   });
