@@ -26,7 +26,15 @@ const socketIo = require('./src/app/utils/websocket')
 
 socketIo(app)
 
+/*
+tmp/message/*
 
+!tmp/message/.gitkeep
+
+tmp/profile/*
+
+!tmp/profile/.gitkeep
+*/
 
 
 
