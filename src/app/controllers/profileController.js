@@ -78,7 +78,9 @@ routes.post('/edit', savePic, async(req, res) => {
       
       } catch(err) {
         //console.error(err)
-        return res.json({error: "Error on uploading a picture, Try again"});
+
+        return res.json(newUserPic)
+        // return res.json({error: "Error on uploading a picture, Try again"});
       }
     }
 
